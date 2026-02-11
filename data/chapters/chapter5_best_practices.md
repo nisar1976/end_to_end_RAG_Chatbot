@@ -1,3 +1,8 @@
+---
+title: "Best Practices & Advanced Usage"
+url: "https://docs.anthropic.com/claude-code/best-practices"
+---
+
 # Chapter 5: Best Practices & Advanced Usage
 
 ## Introduction

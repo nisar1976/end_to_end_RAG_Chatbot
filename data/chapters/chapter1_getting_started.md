@@ -1,3 +1,8 @@
+---
+title: "Getting Started with Claude Code"
+url: "https://docs.anthropic.com/claude-code/getting-started"
+---
+
 # Chapter 1: Getting Started with Claude Code
 
 ## Introduction

@@ -10,14 +10,19 @@
     <div class="main-layout">
         <!-- Left Sidebar with Courses -->
         <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>📚 Learning Paths</h2>
-            </div>
+            <!-- New Chat Button -->
+            <button class="new-chat-btn" onclick="startNewChat()">
+                NEW CHAT
+            </button>
 
             <!-- Ask Me Directly Button -->
             <button class="ask-directly-btn" onclick="toggleAskMode()">
                 💬 Ask Me Directly
             </button>
+
+            <div class="sidebar-header">
+                <h2>📚 Learning Paths</h2>
+            </div>
 
             <div class="courses-container">
                 <!-- Course 1 -->
@@ -241,6 +246,46 @@
             queryInput.focus();
         };
 
+        // Start New Chat
+        window.startNewChat = function() {
+            // Reset course selection to neutral state
+            selectedCourse = -1;
+
+            // Remove active state from all course cards
+            document.querySelectorAll('.course-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Hide suggestions panel
+            suggestionsPanel.style.display = 'none';
+
+            // Reset subtitle to default
+            courseSubtitle.textContent = 'Ask questions about Claude Code and get answers from lesson chapters';
+
+            // Clear all messages and show default welcome message
+            messagesContainer.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <p>Hello! I'm Nisar Khan AI Assistant 👋</p>
+                        <p>You can either:</p>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li><strong>Click a course on the left</strong> to explore topics step-by-step</li>
+                            <li><strong>This chatbot is a tutorial guide for claude code</strong></li>
+                        </ul>
+                        <p>I'll provide answers based on our 5 comprehensive lesson chapters!</p>
+                        <p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #666;">
+                            <strong>🔒 Code Safety:</strong> This is a local educational chatbot running on your machine. All data processing happens locally - no information is sent to external servers except API calls to Anthropic for responses.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            // Focus input for immediate typing
+            queryInput.focus();
+
+            // Note: exploreCourses Set is NOT cleared to preserve learning progress
+        };
+
         // Handle course selection
         window.selectCourse = function(courseIndex) {
             selectedCourse = courseIndex;
@@ -354,7 +399,18 @@
             if (sources && sources.length > 0) {
                 htmlContent += '<div class="message-sources"><strong>Sources:</strong><ul>';
                 for (const source of sources) {
-                    htmlContent += `<li>${escapeHtml(source)}</li>`;
+                    // Handle both string sources (backward compatibility) and source objects
+                    if (typeof source === 'string') {
+                        htmlContent += `<li>${escapeHtml(source)}</li>`;
+                    } else if (source.url) {
+                        // Extract chapter name for display (remove .md and replace underscores)
+                        const displayName = source.chapter.replace('.md', '').replace(/_/g, ' ');
+                        htmlContent += `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer" class="source-link">${escapeHtml(displayName)}</a></li>`;
+                    } else {
+                        // Fallback if URL is missing
+                        const displayName = source.chapter.replace('.md', '').replace(/_/g, ' ');
+                        htmlContent += `<li>${escapeHtml(displayName)}</li>`;
+                    }
                 }
                 htmlContent += '</ul></div>';
             }

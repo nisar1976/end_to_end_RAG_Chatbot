@@ -1,3 +1,8 @@
+---
+title: "File Operations"
+url: "https://docs.anthropic.com/claude-code/file-operations"
+---
+
 # Chapter 3: File Operations
 
 ## Overview

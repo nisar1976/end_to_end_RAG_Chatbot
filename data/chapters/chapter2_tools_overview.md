@@ -1,3 +1,8 @@
+---
+title: "Tools Overview"
+url: "https://docs.anthropic.com/claude-code/tools"
+---
+
 # Chapter 2: Tools Overview
 
 ## Introduction to Tools

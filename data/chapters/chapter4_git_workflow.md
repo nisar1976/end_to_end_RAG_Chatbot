@@ -1,3 +1,8 @@
+---
+title: "Git Workflow Integration"
+url: "https://docs.anthropic.com/claude-code/git-workflow"
+---
+
 # Chapter 4: Git Workflow Integration
 
 ## Overview
