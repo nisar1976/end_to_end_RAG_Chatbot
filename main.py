@@ -22,13 +22,21 @@ rag_system = None
 class QueryRequest(BaseModel):
     """Request model for chat queries."""
     question: str
+    use_tools: bool = True
+
+
+class Source(BaseModel):
+    """Model for a source citation."""
+    chapter: str
+    url: str
 
 
 class QueryResponse(BaseModel):
     """Response model for chat queries."""
     answer: str
-    sources: list
+    sources: list[Source]
     context_count: int
+    tool_calls: list[dict] = []
 
 
 @app.on_event("startup")
@@ -85,11 +93,12 @@ async def query(request: QueryRequest):
         raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     try:
-        result = rag_system.query(request.question)
+        result = rag_system.query(request.question, use_tools=request.use_tools)
         return QueryResponse(
             answer=result['answer'],
             sources=result['sources'],
-            context_count=result['context_count']
+            context_count=result['context_count'],
+            tool_calls=result.get('tool_calls', [])
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")
