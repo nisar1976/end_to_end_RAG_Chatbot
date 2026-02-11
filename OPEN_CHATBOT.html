@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code RAG Chatbot - Local Server Launcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .status {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .status-text {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-indicator.checking {
+            background: #f59e0b;
+        }
+
+        .status-indicator.ready {
+            background: #10b981;
+            animation: none;
+        }
+
+        .status-indicator.error {
+            background: #ef4444;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin: 30px 0;
+            flex-direction: column;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #333;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .urls {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .urls h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .url-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .url-text {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            color: #667eea;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        .instructions {
+            margin: 30px 0;
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            text-align: left;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-out;
+            display: none;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Claude Code RAG Chatbot</h1>
+        <p class="subtitle">Local Server Launcher</p>
+
+        <div class="status">
+            <div class="status-text">
+                <span class="status-indicator checking" id="indicator"></span>
+                <span id="status-message">Checking server status...</span>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="openChatbot()">
+                ✨ Open Chatbot Now
+            </button>
+            <button class="btn-secondary" onclick="checkServer()">
+                🔄 Check Server Status
+            </button>
+        </div>
+
+        <div class="urls">
+            <h3>📍 Quick Links</h3>
+            <div class="url-item">
+                <div class="url-text">http://localhost:8000</div>
+                <button class="copy-btn" onclick="copyToClipboard('http://localhost:8000')">Copy</button>
+            </div>
+            <div class="url-item">
+                <div class="url-text">http://127.0.0.1:8000</div>
+                <button class="copy-btn" onclick="copyToClipboard('http://127.0.0.1:8000')">Copy</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📝 Server Not Running?</h3>
+            <ol>
+                <li>Open terminal/command prompt</li>
+                <li>Navigate to project folder:
+                    <br><code>cd C:\Users\Nisar\Desktop\end_to_end_RAG_Chatbot</code>
+                </li>
+                <li>Start server:
+                    <br><code>python main.py</code>
+                </li>
+                <li>Then click "Open Chatbot Now" above</li>
+            </ol>
+        </div>
+
+        <div class="footer">
+            <p>💡 Tip: You can save this file as a bookmark for quick access</p>
+            <p>Created with FastAPI, ChromaDB & Claude AI</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Check server status on load
+        window.addEventListener('load', checkServer);
+
+        async function checkServer() {
+            const indicator = document.getElementById('indicator');
+            const message = document.getElementById('status-message');
+
+            indicator.className = 'status-indicator checking';
+            message.textContent = 'Checking server status...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/health');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    indicator.className = 'status-indicator ready';
+
+                    if (data.rag_initialized) {
+                        message.textContent = '✅ Server is ready! Click "Open Chatbot Now"';
+                    } else {
+                        message.textContent = '⏳ Server is starting... (initializing database)';
+                    }
+                } else {
+                    throw new Error('Server responded with error');
+                }
+            } catch (error) {
+                indicator.className = 'status-indicator error';
+                message.textContent = '❌ Server not running. Start it first (see instructions below)';
+            }
+        }
+
+        function openChatbot() {
+            try {
+                window.location.href = 'http://localhost:8000';
+            } catch (error) {
+                showToast('Opening browser... If it does not open, copy the URL and open manually');
+                setTimeout(() => {
+                    window.open('http://localhost:8000', '_blank');
+                }, 500);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ Copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy. Please copy manually: ' + text);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Auto-check server every 5 seconds
+        setInterval(checkServer, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    height: 90vh;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    margin: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    border-right: 2px solid #667eea;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    margin-bottom: 20px;
+}
+
+.sidebar-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fbbf24;
+    margin: 0;
+}
+
+/* Ask Me Directly Button */
+.ask-directly-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+}
+
+.ask-directly-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+}
+
+.ask-directly-btn:active {
+    transform: translateY(0);
+}
+
+.courses-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+/* Course Cards */
+.course-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+    border: 2px solid #475569;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.course-card:hover {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea30 0%, #764ba230 100%);
+    transform: translateX(6px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.2);
+}
+
+.course-card.active {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea40 0%, #764ba240 100%);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.course-icon {
+    font-size: 28px;
+    min-width: 32px;
+    text-align: center;
+}
+
+.course-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.course-info h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fbbf24;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.course-info p {
+    font-size: 11px;
+    color: #cbd5e1;
+    margin: 2px 0 0 0;
+    line-height: 1.2;
+}
+
+.course-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Progress Section */
+.progress-section {
+    padding-top: 20px;
+    border-top: 2px solid #475569;
+}
+
+.progress-section h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fbbf24;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #334155;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+}
+
+.progress-text {
+    font-size: 12px;
+    color: #cbd5e1;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 1;
+    flex: 1;
+    background: white;
+    overflow: hidden;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-content h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.header-content p {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Chat Area */
+.chat-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Messages Container */
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #f9fafb;
+}
+
+.message {
+    display: flex;
+    gap: 12px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* User Message */
+.user-message {
+    justify-content: flex-end;
+}
+
+.user-message .message-content {
+    background: #667eea;
+    color: white;
+    border-radius: 16px;
+    padding: 12px 16px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.user-message p {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+/* Bot Message */
+.bot-message {
+    justify-content: flex-start;
+}
+
+.bot-message .message-content {
+    background: white;
+    color: #333;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 16px;
+    max-width: 85%;
+    word-wrap: break-word;
+}
+
+.bot-message p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Error Message */
+.error-message .message-content {
+    background: #fee;
+    color: #c00;
+    border: 1px solid #fcc;
+}
+
+/* Message Sources */
+.message-sources {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.message-sources strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 6px;
+}
+
+.message-sources ul {
+    list-style: none;
+    font-size: 13px;
+}
+
+.message-sources li {
+    padding: 4px 0;
+    color: #666;
+}
+
+.message-sources li::before {
+    content: "• ";
+    color: #667eea;
+    margin-right: 6px;
+}
+
+/* Suggestions Panel */
+.suggestions-panel {
+    padding: 20px 40px;
+    background: #f0f4ff;
+    border-top: 1px solid #d0dffb;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.suggestions-panel h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #667eea;
+    margin: 0 0 12px 0;
+}
+
+.suggestions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.suggestion-btn {
+    background: white;
+    border: 1px solid #d0dffb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: inherit;
+}
+
+.suggestion-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateX(4px);
+}
+
+.suggestion-btn:active {
+    transform: translateX(2px);
+}
+
+/* Input Area */
+.input-area {
+    padding: 20px 40px 30px;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+}
+
+.query-form {
+    display: flex;
+    gap: 8px;
+}
+
+.input-group {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.query-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.query-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.query-input::placeholder {
+    color: #999;
+}
+
+/* Send Button */
+.send-button {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+}
+
+.send-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.send-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.send-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.send-icon {
+    display: inline-block;
+    font-size: 20px;
+}
+
+/* Status Bar */
+.status-bar {
+    padding: 10px 40px;
+    background: #f3f4f6;
+    border-top: 1px solid #e5e7eb;
+    font-size: 13px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-indicator::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+}
+
+.status-indicator.loading::before {
+    background: #f59e0b;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Scrollbar Styling */
+.messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages::-webkit-scrollbar-track {
+    background: #f3f4f6;
+}
+
+.messages::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Sidebar Scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #764ba2;
+}
+
+.suggestions-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.suggestions-panel::-webkit-scrollbar-track {
+    background: #f0f4ff;
+}
+
+.suggestions-panel::-webkit-scrollbar-thumb {
+    background: #d0dffb;
+    border-radius: 3px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-layout {
+        max-width: 100%;
+    }
+
+    .sidebar {
+        width: 240px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        margin: 0;
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 150px;
+        padding: 12px;
+        flex-direction: column;
+        border-right: none;
+        border-bottom: 2px solid #667eea;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+    .sidebar-header {
+        display: none;
+    }
+
+    .ask-directly-btn {
+        padding: 12px;
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+
+    .courses-container {
+        flex-direction: row;
+        gap: 10px;
+        margin-bottom: 0;
+    }
+
+    .course-card {
+        flex-direction: column;
+        padding: 12px;
+        min-width: 85px;
+    }
+
+    .course-info {
+        display: none;
+    }
+
+    .course-icon {
+        font-size: 24px;
+    }
+
+    .course-badge {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+
+    .progress-section {
+        display: none;
+    }
+
+    .container {
+        max-width: 100%;
+        height: auto;
+        flex: 1;
+    }
+
+    .header-content h1 {
+        font-size: 24px;
+    }
+
+    .header-content p {
+        font-size: 12px;
+    }
+
+    .messages {
+        padding: 20px;
+    }
+
+    .user-message .message-content {
+        max-width: 85%;
+    }
+
+    .bot-message .message-content {
+        max-width: 95%;
+    }
+
+    .input-area {
+        padding: 15px 20px 20px;
+    }
+
+    .query-form {
+        gap: 6px;
+    }
+
+    .send-button {
+        padding: 12px 16px;
+        min-width: 44px;
+    }
+
+    .status-bar {
+        padding: 8px 20px;
+        font-size: 12px;
+    }
+
+    .suggestions-panel {
+        padding: 15px 20px;
+        max-height: 120px;
+    }
+
+    .suggestion-btn {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        max-height: 140px;
+        padding: 10px;
+    }
+
+    .ask-directly-btn {
+        padding: 10px;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .courses-container {
+        gap: 8px;
+    }
+
+    .course-card {
+        min-width: 75px;
+        padding: 10px;
+    }
+
+    .course-icon {
+        font-size: 22px;
+    }
+
+    .course-badge {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+    }
+
+    .header-content h1 {
+        font-size: 20px;
+    }
+
+    .header-content p {
+        display: none;
+    }
+
+    .messages {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .user-message .message-content {
+        max-width: 90%;
+    }
+
+    .bot-message .message-content {
+        max-width: 100%;
+    }
+
+    .message-content p {
+        font-size: 14px;
+    }
+
+    .query-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    .suggestions-panel {
+        padding: 12px 15px;
+        max-height: 100px;
+    }
+
+    .suggestions-panel h3 {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .suggestion-btn {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+}
