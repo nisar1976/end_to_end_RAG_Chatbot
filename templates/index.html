@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code RAG Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="main-layout">
+        <!-- Left Sidebar with Courses -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Learning Paths</h2>
+            </div>
+
+            <!-- Ask Me Directly Button -->
+            <button class="ask-directly-btn" onclick="toggleAskMode()">
+                💬 Ask Me Directly
+            </button>
+
+            <div class="courses-container">
+                <!-- Course 1 -->
+                <div class="course-card" onclick="selectCourse(0)" data-course="0">
+                    <div class="course-icon">🚀</div>
+                    <div class="course-info">
+                        <h3>Getting Started</h3>
+                        <p>Installation & Setup</p>
+                    </div>
+                    <span class="course-badge">1</span>
+                </div>
+
+                <!-- Course 2 -->
+                <div class="course-card" onclick="selectCourse(1)" data-course="1">
+                    <div class="course-icon">🛠️</div>
+                    <div class="course-info">
+                        <h3>Tools Overview</h3>
+                        <p>Read, Write, Edit & More</p>
+                    </div>
+                    <span class="course-badge">2</span>
+                </div>
+
+                <!-- Course 3 -->
+                <div class="course-card" onclick="selectCourse(2)" data-course="2">
+                    <div class="course-icon">📁</div>
+                    <div class="course-info">
+                        <h3>File Operations</h3>
+                        <p>Reading & Editing Files</p>
+                    </div>
+                    <span class="course-badge">3</span>
+                </div>
+
+                <!-- Course 4 -->
+                <div class="course-card" onclick="selectCourse(3)" data-course="3">
+                    <div class="course-icon">🔀</div>
+                    <div class="course-info">
+                        <h3>Git Workflow</h3>
+                        <p>Commits & Pull Requests</p>
+                    </div>
+                    <span class="course-badge">4</span>
+                </div>
+
+                <!-- Course 5 -->
+                <div class="course-card" onclick="selectCourse(4)" data-course="4">
+                    <div class="course-icon">✨</div>
+                    <div class="course-info">
+                        <h3>Best Practices</h3>
+                        <p>Tips & Optimization</p>
+                    </div>
+                    <span class="course-badge">5</span>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h4>Progress</h4>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p id="progressText" class="progress-text">0/5 courses explored</p>
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <h1>Claude Code RAG Chatbot</h1>
+                    <p id="courseSubtitle">Ask questions about Claude Code and get answers from lesson chapters</p>
+                </div>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="chat-area">
+                <!-- Messages Container -->
+                <div id="messages" class="messages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <p>Hello! I'm Nisar Khan AI Assistant 👋</p>
+                            <p>You can either:</p>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li><strong>Click a course on the left</strong> to explore topics step-by-step</li>
+                                <li><strong>This chatbot is a tutorial guide for claude code</strong></li>
+                            </ul>
+                            <p>I'll provide answers based on our 5 comprehensive lesson chapters!</p>
+                            <p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #666;">
+                                <strong>🔒 Code Safety:</strong> This is a local educational chatbot running on your machine. All data processing happens locally - no information is sent to external servers except API calls to Anthropic for responses.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Questions Panel -->
+                <div id="suggestionsPanel" class="suggestions-panel" style="display: none;">
+                    <h3 id="suggestionsTitle">Suggested Questions</h3>
+                    <div id="suggestionsList" class="suggestions-list"></div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <form id="queryForm" class="query-form">
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                id="queryInput"
+                                class="query-input"
+                                placeholder="Ask a question about Claude Code..."
+                                autocomplete="off"
+                            />
+                            <button type="submit" class="send-button" id="sendButton">
+                                <span class="send-icon">→</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="status-bar">
+                <span id="statusIndicator" class="status-indicator">Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messagesContainer = document.getElementById('messages');
+        const queryInput = document.getElementById('queryInput');
+        const queryForm = document.getElementById('queryForm');
+        const sendButton = document.getElementById('sendButton');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const suggestionsPanel = document.getElementById('suggestionsPanel');
+        const suggestionsList = document.getElementById('suggestionsList');
+        const courseSubtitle = document.getElementById('courseSubtitle');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        // Course data
+        const courses = [
+            {
+                title: 'Getting Started',
+                icon: '🚀',
+                questions: [
+                    'How do I install Claude Code?',
+                    'What are the system requirements?',
+                    'How do I set up authentication?',
+                    'What is the basic workflow?'
+                ]
+            },
+            {
+                title: 'Tools Overview',
+                icon: '🛠️',
+                questions: [
+                    'What tools are available in Claude Code?',
+                    'How does the Read tool work?',
+                    'Can I use the Write tool?',
+                    'What is the Bash tool for?',
+                    'How do Grep and Glob help?'
+                ]
+            },
+            {
+                title: 'File Operations',
+                icon: '📁',
+                questions: [
+                    'How do I read files?',
+                    'How do I create new files?',
+                    'How do I edit files efficiently?',
+                    'Can I read PDF files?',
+                    'What are best practices for file operations?'
+                ]
+            },
+            {
+                title: 'Git Workflow',
+                icon: '🔀',
+                questions: [
+                    'What are best practices for commits?',
+                    'How do I create a pull request?',
+                    'How do I handle merge conflicts?',
+                    'What is a good branch naming convention?',
+                    'How do I manage git workflows?'
+                ]
+            },
+            {
+                title: 'Best Practices',
+                icon: '✨',
+                questions: [
+                    'What should I do before editing a file?',
+                    'How do I debug efficiently?',
+                    'What are performance optimization tips?',
+                    'How do I write secure code?',
+                    'What are common patterns to follow?'
+                ]
+            }
+        ];
+
+        let selectedCourse = -1;
+        let exploreCourses = new Set();
+
+        // Toggle Ask Mode
+        window.toggleAskMode = function() {
+            selectedCourse = -1;
+            document.querySelectorAll('.course-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            courseSubtitle.textContent = '💬 Ask me anything about Claude Code - Free form questions welcome!';
+            suggestionsPanel.style.display = 'none';
+
+            messagesContainer.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <p><strong>💬 This chatbot is a tutorial guide for claude code</strong></p>
+                        <p>You can now ask me any question about Claude Code! I'll search through all the lessons and provide you with the most relevant answer.</p>
+                        <p style="margin-top: 10px; font-size: 13px; color: #666;">Type your question below and I'll help you find the answer.</p>
+                        <p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #666;">
+                            <strong>🔒 Code Safety:</strong> This is a local educational chatbot running on your machine. All data processing happens locally - no information is sent to external servers except API calls to Anthropic for responses.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            queryInput.focus();
+        };
+
+        // Handle course selection
+        window.selectCourse = function(courseIndex) {
+            selectedCourse = courseIndex;
+            const course = courses[courseIndex];
+
+            exploreCourses.add(courseIndex);
+            updateProgress();
+
+            // Update UI
+            document.querySelectorAll('.course-card').forEach((card, idx) => {
+                card.classList.toggle('active', idx === courseIndex);
+            });
+
+            courseSubtitle.textContent = `${course.icon} ${course.title} - Click a suggested question or ask your own`;
+
+            // Show suggestions
+            suggestionsList.innerHTML = '';
+            course.questions.forEach(question => {
+                const btn = document.createElement('button');
+                btn.className = 'suggestion-btn';
+                btn.textContent = question;
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    queryInput.value = question;
+                    queryForm.dispatchEvent(new Event('submit'));
+                };
+                suggestionsList.appendChild(btn);
+            });
+
+            suggestionsPanel.style.display = 'block';
+            queryInput.focus();
+
+            // Clear messages for new course
+            messagesContainer.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <p><strong>${course.icon} ${course.title}</strong></p>
+                        <p>Choose a question below or ask something related to this topic!</p>
+                    </div>
+                </div>
+            `;
+        };
+
+        // Update progress
+        function updateProgress() {
+            const completed = exploreCourses.size;
+            const percentage = (completed / courses.length) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${completed}/5 courses explored`;
+        }
+
+        // Handle form submission
+        queryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const question = queryInput.value.trim();
+            if (!question) return;
+
+            // Add user message
+            addMessage(question, 'user');
+            queryInput.value = '';
+            sendButton.disabled = true;
+            statusIndicator.textContent = 'Thinking...';
+            statusIndicator.classList.add('loading');
+
+            try {
+                // Send query to backend
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to get response');
+                }
+
+                const data = await response.json();
+
+                // Add bot message with answer
+                addMessage(data.answer, 'bot', data.sources);
+
+                statusIndicator.textContent = 'Ready';
+                statusIndicator.classList.remove('loading');
+
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage(
+                    `Error: ${error.message}. Please try again.`,
+                    'error'
+                );
+                statusIndicator.textContent = 'Error';
+                statusIndicator.classList.remove('loading');
+            } finally {
+                sendButton.disabled = false;
+                queryInput.focus();
+            }
+        });
+
+        // Add message to chat
+        function addMessage(content, type, sources = []) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+
+            let htmlContent = `<div class="message-content"><p>${escapeHtml(content)}</p>`;
+
+            // Add sources if available
+            if (sources && sources.length > 0) {
+                htmlContent += '<div class="message-sources"><strong>Sources:</strong><ul>';
+                for (const source of sources) {
+                    htmlContent += `<li>${escapeHtml(source)}</li>`;
+                }
+                htmlContent += '</ul></div>';
+            }
+
+            htmlContent += '</div>';
+            messageDiv.innerHTML = htmlContent;
+
+            messagesContainer.appendChild(messageDiv);
+
+            // Auto-scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            queryInput.focus();
+        });
+
+        // Enter key handler
+        queryInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                queryForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
