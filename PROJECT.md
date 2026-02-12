@@ -172,6 +172,12 @@ Transform static educational documentation into an intelligent, conversational l
 
 ## ✨ Key Features
 
+### 🎨 Interface Preview
+
+![RAG Chatbot Interface](rag-chatbot-interface.png)
+
+*Professional RAG chatbot interface with intuitive course navigation, real-time chat messaging, and beautiful gradient design*
+
 ### Core RAG Capabilities
 
 - 🔍 **Semantic Search**: Vector-based similarity matching with 384-dimensional embeddings from all-MiniLM-L6-v2

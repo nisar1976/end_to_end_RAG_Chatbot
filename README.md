@@ -34,6 +34,16 @@ A complete Retrieval-Augmented Generation (RAG) chatbot system that serves a web
 - ✅ **Source Citations** - Shows which chapters provided the answer
 - ✅ **Easy Setup** - Simple installation and configuration
 
+## 🎨 Interface Preview
+
+![RAG Chatbot Interface](rag-chatbot-interface.png)
+
+**Beautiful, intuitive chat interface with:**
+- Sidebar course navigation with 5 learning paths
+- Real-time chat messaging system
+- Interactive learning modules
+- Clean, modern UI design
+
 ## 📋 Prerequisites
 
 - **Python 3.8+** - Required for FastAPI and dependencies
