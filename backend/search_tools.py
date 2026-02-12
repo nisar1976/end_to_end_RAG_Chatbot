@@ -10,9 +10,69 @@ import yaml
 
 # Module-level cache for course metadata
 _course_metadata_cache = None
+_cache_file_mtimes = None  # Track file modification times to invalidate cache
 
 
 # Tool definitions in Anthropic format
+def _get_chapter_file_mtimes(chapters_dir: str = "data/chapters") -> dict:
+    """Get modification times for all chapter files.
+
+    Args:
+        chapters_dir: Directory containing markdown chapter files
+
+    Returns:
+        Dictionary mapping file path to modification time
+    """
+    file_mtimes = {}
+    chapter_files = sorted(glob.glob(os.path.join(chapters_dir, "*.md")))
+
+    for chapter_path in chapter_files:
+        try:
+            mtime = os.path.getmtime(chapter_path)
+            file_mtimes[chapter_path] = mtime
+        except OSError:
+            pass
+
+    return file_mtimes
+
+
+def _cache_is_valid(chapters_dir: str = "data/chapters") -> bool:
+    """Check if cached course metadata is still valid.
+
+    Cache is invalid if:
+    - No cache exists
+    - Files have been added/removed
+    - Files have been modified
+
+    Args:
+        chapters_dir: Directory containing markdown chapter files
+
+    Returns:
+        True if cache is valid, False otherwise
+    """
+    global _cache_file_mtimes
+
+    if _course_metadata_cache is None:
+        return False
+
+    current_mtimes = _get_chapter_file_mtimes(chapters_dir)
+
+    if _cache_file_mtimes is None:
+        return False
+
+    # Check if files have changed
+    if set(current_mtimes.keys()) != set(_cache_file_mtimes.keys()):
+        # Files added or removed
+        return False
+
+    # Check if any file was modified
+    for filepath, current_mtime in current_mtimes.items():
+        if _cache_file_mtimes.get(filepath) != current_mtime:
+            return False
+
+    return True
+
+
 TOOLS = [
     {
         "name": "search_content",
@@ -53,15 +113,18 @@ TOOLS = [
 def _load_course_metadata(chapters_dir: str = "data/chapters") -> dict:
     """Load and cache course metadata from markdown files.
 
+    Cache is automatically invalidated when files are modified.
+
     Args:
         chapters_dir: Directory containing markdown chapter files
 
     Returns:
         Dictionary mapping chapter names to course information
     """
-    global _course_metadata_cache
+    global _course_metadata_cache, _cache_file_mtimes
 
-    if _course_metadata_cache is not None:
+    # Check if cached data is still valid
+    if _cache_is_valid(chapters_dir):
         return _course_metadata_cache
 
     metadata = {}
@@ -93,6 +156,7 @@ def _load_course_metadata(chapters_dir: str = "data/chapters") -> dict:
         }
 
     _course_metadata_cache = metadata
+    _cache_file_mtimes = _get_chapter_file_mtimes(chapters_dir)
     return metadata
 
 
@@ -343,6 +407,7 @@ def execute_tool(tool_name: str, tool_input: dict, rag_system=None) -> dict:
 
 
 def clear_course_cache():
-    """Clear the course metadata cache."""
-    global _course_metadata_cache
+    """Clear the course metadata cache and file modification times."""
+    global _course_metadata_cache, _cache_file_mtimes
     _course_metadata_cache = None
+    _cache_file_mtimes = None

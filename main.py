@@ -18,6 +18,9 @@ app = FastAPI(title="Claude Code RAG Chatbot", version="1.0.0")
 # Initialize RAG system (global instance)
 rag_system = None
 
+# Constants for input validation
+MAX_QUESTION_LENGTH = 5000  # Maximum question length in characters
+
 
 class QueryRequest(BaseModel):
     """Request model for chat queries."""
@@ -89,11 +92,20 @@ async def query(request: QueryRequest):
     if not rag_system:
         raise HTTPException(status_code=503, detail="RAG system not initialized")
 
-    if not request.question or not request.question.strip():
+    # Validate question
+    question = request.question.strip() if request.question else ""
+
+    if not question:
         raise HTTPException(status_code=400, detail="Question cannot be empty")
 
+    if len(question) > MAX_QUESTION_LENGTH:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Question exceeds maximum length of {MAX_QUESTION_LENGTH} characters"
+        )
+
     try:
-        result = rag_system.query(request.question, use_tools=request.use_tools)
+        result = rag_system.query(question, use_tools=request.use_tools)
         return QueryResponse(
             answer=result['answer'],
             sources=result['sources'],

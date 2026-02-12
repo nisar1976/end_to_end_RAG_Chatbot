@@ -1,5 +1,6 @@
 import os
 import glob
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -147,6 +148,8 @@ class RAGSystem:
     def _split_into_chunks(self, content: str, chapter_name: str) -> list:
         """Split document content into logical chunks.
 
+        Splits on ## headers while respecting code block boundaries.
+
         Args:
             content: Full document content
             chapter_name: Name of the chapter
@@ -158,15 +161,24 @@ class RAGSystem:
         lines = content.split('\n')
         current_chunk = []
         current_title = chapter_name
+        in_code_block = False
 
         for line in lines:
-            if line.startswith('## '):
+            # Track code block boundaries (triple backticks)
+            if line.strip().startswith('```'):
+                in_code_block = not in_code_block
+                current_chunk.append(line)
+                continue
+
+            # Check for header (## with optional space) - but only outside code blocks
+            if not in_code_block and re.match(r'^##\s*\S', line):
                 # Start of new section
                 if current_chunk:
                     chunk_text = '\n'.join(current_chunk)
                     chunks.append((current_title, chunk_text))
                     current_chunk = []
-                current_title = line.replace('## ', '').strip()
+                # Extract title from header (remove ## and whitespace)
+                current_title = re.sub(r'^##\s*', '', line).strip()
             else:
                 current_chunk.append(line)
 
