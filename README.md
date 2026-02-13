@@ -1,4 +1,4 @@
-# End-to-End RAG Chatbot for Claude Code
+# AI-Powered RAG Chatbot for Claude Code Learning
 
 A complete Retrieval-Augmented Generation (RAG) chatbot system that serves a web interface on a local server. The chatbot answers questions about Claude Code using sample lesson chapters stored in a vector database.
 
@@ -27,7 +27,7 @@ A complete Retrieval-Augmented Generation (RAG) chatbot system that serves a web
 
 - ✅ **Local FastAPI Server** - Runs on `http://localhost:8000`
 - ✅ **RAG System** - Semantic search using ChromaDB and sentence-transformers
-- ✅ **Claude API Integration** - Powered by Anthropic's Claude Opus 4.6
+- ✅ **OpenAI API Integration** - Powered by OpenAI's GPT-3.5-turbo
 - ✅ **Vector Database** - ChromaDB for efficient document retrieval
 - ✅ **Sample Lessons** - 5 comprehensive Claude Code learning chapters
 - ✅ **Modern Web UI** - Clean, responsive chat interface
@@ -47,7 +47,7 @@ A complete Retrieval-Augmented Generation (RAG) chatbot system that serves a web
 ## 📋 Prerequisites
 
 - **Python 3.8+** - Required for FastAPI and dependencies
-- **Anthropic API Key** - Get from https://console.anthropic.com/
+- **OpenAI API Key** - Get from https://platform.openai.com/api-keys
 - **10-15 minutes** - For initial setup and first run
 
 ## 🚀 Detailed Step-by-Step Setup Guide
@@ -56,7 +56,7 @@ A complete Retrieval-Augmented Generation (RAG) chatbot system that serves a web
 
 Before starting, verify you have:
 1. **Python 3.8+** installed on your system
-2. **Anthropic API Key** from https://console.anthropic.com/
+2. **OpenAI API Key** from https://platform.openai.com/api-keys
 
 #### Check if Python is installed:
 
@@ -165,7 +165,7 @@ type .env
 
 You should see:
 ```
-ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
 HOST=localhost
 PORT=8000
 ```
@@ -176,9 +176,9 @@ PORT=8000
 notepad .env
 ```
 
-3. Replace the `ANTHROPIC_API_KEY=` line with:
+3. Replace the `OPENAI_API_KEY=` line with:
 ```
-ANTHROPIC_API_KEY=sk-ant-api03-YOUR_ACTUAL_KEY_HERE
+OPENAI_API_KEY=sk-YOUR_ACTUAL_KEY_HERE
 ```
 
 4. Save and close (Ctrl+S, then close window)
@@ -194,18 +194,17 @@ ANTHROPIC_API_KEY=sk-ant-api03-YOUR_ACTUAL_KEY_HERE
 7. Right-click `.env` → Open with Notepad
 8. Add your API key on the first line:
 ```
-ANTHROPIC_API_KEY=sk-ant-api03-YOUR_ACTUAL_KEY_HERE
+OPENAI_API_KEY=sk-YOUR_ACTUAL_KEY_HERE
 ```
 9. Save and close
 
 **⚠️ Where to get your API Key:**
 
-1. Go to https://console.anthropic.com/
+1. Go to https://platform.openai.com/api-keys
 2. Sign in or create account
-3. Click "API Keys" in left sidebar
-4. Click "Create Key"
-5. Copy the entire key (starts with `sk-ant-api03-`)
-6. Paste it into your `.env` file
+3. Click "Create new secret key"
+4. Copy the entire key (starts with `sk-`)
+5. Paste it into your `.env` file
 
 **Verify .env is correct:**
 
@@ -216,7 +215,7 @@ type .env
 
 Should output:
 ```
-ANTHROPIC_API_KEY=sk-ant-api03-YOUR_KEY_HERE
+OPENAI_API_KEY=sk-YOUR_KEY_HERE
 HOST=localhost
 PORT=8000
 ```
@@ -235,7 +234,7 @@ python main.py
 
 ```
 ==================================================
-Claude Code RAG Chatbot
+AI-Powered RAG Chatbot for Claude Code Learning
 ==================================================
 Server starting on http://localhost:8000
 Open your browser to http://localhost:8000
@@ -255,7 +254,7 @@ INFO:     Uvicorn running on http://localhost:8000 (Press CTRL+C to quit)
 | Error | What to do |
 |-------|-----------|
 | `ModuleNotFoundError: No module named 'fastapi'` | Run `pip install -r requirements.txt` again |
-| `ERROR: ANTHROPIC_API_KEY not set in environment variables` | Your `.env` file is missing or API key is blank. Check Step 4 |
+| `ERROR: OPENAI_API_KEY not set in environment variables` | Your `.env` file is missing or API key is blank. Check Step 4 |
 | `Port 8000 already in use` | Another program uses port 8000. See Troubleshooting section |
 | `ImportError: cannot import name 'ValidationError'` | Run `pip install --upgrade -r requirements.txt` |
 
@@ -313,7 +312,7 @@ pip install -r requirements.txt
 This installs:
 - `fastapi` - Web framework
 - `uvicorn` - ASGI server
-- `anthropic` - Claude API client
+- `openai` - OpenAI API client
 - `chromadb` - Vector database
 - `sentence-transformers` - Embedding model
 - `python-dotenv` - Environment variable management
@@ -325,9 +324,9 @@ This installs:
    copy .env.example .env
    ```
 
-2. Edit `.env` and add your Anthropic API key:
+2. Edit `.env` and add your OpenAI API key:
    ```
-   ANTHROPIC_API_KEY=sk-ant-api03-YOUR_KEY_HERE
+   OPENAI_API_KEY=sk-YOUR_KEY_HERE
    ```
 
 ### Step 3: Run the Server
@@ -339,7 +338,7 @@ python main.py
 Expected output:
 ```
 ==================================================
-Claude Code RAG Chatbot
+AI-Powered RAG Chatbot for Claude Code Learning
 ==================================================
 Server starting on http://localhost:8000
 Open your browser to http://localhost:8000
@@ -409,7 +408,7 @@ end_to_end_RAG_Chatbot/
 - Generates embeddings using `sentence-transformers`
 - Stores vectors in ChromaDB for fast retrieval
 - Implements semantic search for relevant context
-- Integrates with Claude API for response generation
+- Integrates with OpenAI API for response generation
 
 **2. FastAPI Server (`main.py`)**
 - RESTful API endpoints
@@ -521,7 +520,7 @@ The system includes 5 comprehensive chapters:
 
 ## 🛠️ Troubleshooting
 
-### ❌ "ERROR: ANTHROPIC_API_KEY not set in environment variables"
+### ❌ "ERROR: OPENAI_API_KEY not set in environment variables"
 
 **What this means:** The server can't find your API key
 
@@ -545,15 +544,15 @@ The system includes 5 comprehensive chapters:
 
    Should show:
    ```
-   ANTHROPIC_API_KEY=sk-ant-api03-YOUR_KEY
+   OPENAI_API_KEY=sk-YOUR_KEY
    HOST=localhost
    PORT=8000
    ```
 
 3. **Verify API key is valid:**
-   - Go to https://console.anthropic.com/
+   - Go to https://platform.openai.com/api-keys
    - Get a new key if needed
-   - Make sure key starts with `sk-ant-api03-`
+   - Make sure key starts with `sk-`
    - No spaces or quotes around the key
 
 4. **Edit .env file:**
@@ -563,7 +562,7 @@ The system includes 5 comprehensive chapters:
 
    Update first line to:
    ```
-   ANTHROPIC_API_KEY=sk-ant-api03-YOUR_ACTUAL_KEY
+   OPENAI_API_KEY=sk-YOUR_ACTUAL_KEY
    ```
 
    Save and close.
@@ -793,8 +792,8 @@ Traceback (most recent call last):
    - Restart server: Ctrl+C then `python main.py`
 
 3. **Check API limits:**
-   - Verify Anthropic API is working
-   - Visit https://console.anthropic.com/ to check usage
+   - Verify OpenAI API is working
+   - Visit https://platform.openai.com/account/usage/overview to check usage
    - Check you have remaining API quota
 
 ---
@@ -860,8 +859,8 @@ self.embedding_model = SentenceTransformer("your-model-name")
 ### Change Language Model
 Edit `rag_system.py`:
 ```python
-response = self.anthropic_client.messages.create(
-    model="claude-sonnet-4-5-20250929",  # Or another model
+response = self.openai_client.chat.completions.create(
+    model="gpt-3.5-turbo",  # Or another model
     ...
 )
 ```
@@ -893,7 +892,7 @@ context = rag_system.retrieve_context(question, top_k=5)  # Get top 5 instead of
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [ChromaDB Guide](https://docs.trychroma.com/)
 - [Sentence Transformers](https://www.sbert.net/)
-- [Anthropic API Docs](https://docs.anthropic.com/)
+- [OpenAI API Documentation](https://platform.openai.com/docs)
 - [Claude Code Official Docs](https://github.com/anthropics/claude-code)
 
 ## 📝 License

@@ -16,7 +16,7 @@ uv run python main.py
 # Create/update .env configuration file
 copy .env.example .env
 notepad .env
-# Add: ANTHROPIC_API_KEY=sk-ant-api03-YOUR_KEY
+# Add: OPENAI_API_KEY=sk-YOUR_KEY
 ```
 
 ## Architecture Overview
@@ -30,7 +30,7 @@ FastAPI Server (main.py)
     ↓
 RAG System (rag_system.py)
     ├─ ChromaDB (Vector Database)
-    └─ Anthropic Claude API
+    └─ OpenAI API
 ```
 
 ### Data Flow for a User Query
@@ -43,7 +43,7 @@ RAG System (rag_system.py)
    - Searches ChromaDB for top-3 most similar document chunks
 5. **Generation** (rag_system.py:generate_response):
    - Formats retrieved chunks as context
-   - Calls Claude API with context + question
+   - Calls OpenAI API with context + question
    - Returns answer + sources
 6. **Response**: FastAPI returns JSON with answer, sources, context_count
 7. **Display** (JavaScript): Renders answer in chat with citations
@@ -91,10 +91,10 @@ requirements.txt           # Python dependencies
 - Both messages display code safety notice (lines 106-108, 233-236)
 
 ### Customizing the AI Model/Behavior
-- **Model choice**: rag_system.py line 239, change `model="claude-opus-4-6"`
-- **System prompt**: rag_system.py line 219, modify assistant instructions
-- **Max tokens**: rag_system.py line 240, adjust response length limit
-- **Retrieval count**: rag_system.py line 160, change `top_k=3` for more/fewer chunks
+- **Model choice**: rag_system.py, change `model="gpt-3.5-turbo"` to another OpenAI model
+- **System prompt**: rag_system.py, modify assistant instructions
+- **Max tokens**: rag_system.py, adjust response length limit
+- **Retrieval count**: rag_system.py, change `top_k=3` for more/fewer chunks
 
 ### API Response Structure
 All queries return:
@@ -115,11 +115,11 @@ All queries return:
 - **Per-query**: ~10ms to encode question
 - **Search**: Cosine similarity in ChromaDB (~50ms for 25 chunks)
 
-### Claude API Calls
-- **Model**: claude-opus-4-6 (most capable)
+### OpenAI API Calls
+- **Model**: gpt-3.5-turbo (cost-effective and fast)
 - **Latency**: ~2 seconds per request (network + inference)
-- **Context window**: Up to 1024 tokens per response
-- **Cost**: Pay-per-token via Anthropic API key
+- **Context window**: Up to 2048 tokens per response
+- **Cost**: Pay-per-token via OpenAI API key (~$0.002 per 1K tokens)
 - **Error handling**: Raised as HTTP 500 in FastAPI if API fails
 
 ### ChromaDB Persistent Storage
@@ -139,8 +139,8 @@ All queries return:
 ## Configuration (.env)
 
 ```
-ANTHROPIC_API_KEY=sk-ant-api03-...  # Required: Anthropic API key
-HOST=localhost                       # Optional: Server host (default: localhost)
+OPENAI_API_KEY=sk-...               # Required: OpenAI API key
+HOST=localhost                      # Optional: Server host (default: localhost)
 PORT=8000                           # Optional: Server port (default: 8000)
 ```
 
@@ -160,9 +160,9 @@ Modify `courses` array in templates/index.html (~line 155). Each course needs:
 These are purely frontend; questions route through same RAG system.
 
 ### Change Model Provider
-To use Claude Sonnet instead of Opus:
-1. rag_system.py line 239: Change model to "claude-sonnet-4-5-20250929"
-2. System prompt (line 219) remains the same
+To use a different OpenAI model:
+1. rag_system.py: Change model to "gpt-4" or another OpenAI model
+2. System prompt remains the same
 3. Costs and latencies will differ
 
 ### Adjust Retrieval Sensitivity
@@ -232,7 +232,7 @@ print(result['sources'])     # Chapters used
 
 Critical dependencies (from requirements.txt):
 - **fastapi==0.104.1**: Web framework (must match for type hints)
-- **anthropic==0.27.0**: Claude API client (may have breaking changes in newer versions)
+- **openai>=1.0.0**: OpenAI API client (may have breaking changes in newer versions)
 - **chromadb==0.4.24**: Vector database (persistence format specific to version)
 - **sentence-transformers==2.2.2**: Embedding model (changing version affects vector dimensions)
 

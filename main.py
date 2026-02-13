@@ -140,10 +140,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def main():
     """Run the application."""
     # Verify API key is set
-    api_key = os.getenv("ANTHROPIC_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        print("ERROR: ANTHROPIC_API_KEY not set in environment variables")
-        print("Please copy .env.example to .env and add your API key")
+        print("ERROR: OPENAI_API_KEY not set in environment variables")
+        print("Please copy .env.example to .env and add your OpenAI API key")
         return
 
     # Get configuration from environment

@@ -1,10 +1,10 @@
-# 🤖 Nisar Claude Code Lesson RAG Chatbot
+# 🤖 AI-Powered RAG Chatbot for Claude Code Learning
 
 **An Intelligent Educational Assistant powered by Retrieval-Augmented Generation**
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)
-![Claude](https://img.shields.io/badge/Claude-Opus%204.6-purple.svg)
+![OpenAI](https://img.shields.io/badge/OpenAI-GPT--3.5-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 ---
@@ -59,7 +59,7 @@ Transform static educational documentation into an intelligent, conversational l
 │  │  ├─ Vector Search (ChromaDB)                             │
 │  │  └─ Context Formatting                                   │
 │  └─ Generation Pipeline                                     │
-│     ├─ Claude API Integration                               │
+│     ├─ OpenAI API Integration                               │
 │     ├─ Multi-turn Conversations                             │
 │     └─ Fallback Mechanisms                                  │
 └──────────────────────┬──────────────────────────────────────┘
@@ -82,7 +82,7 @@ Transform static educational documentation into an intelligent, conversational l
    - Embed question (384-dimensional vector, ~10ms)
    - Search ChromaDB for top-3 similar chunks (cosine similarity, ~50ms)
    - Format chunks with chapter metadata
-5. **Generation** → Claude API synthesizes answer with context (~2 seconds)
+5. **Generation** → OpenAI API synthesizes answer with context (~2 seconds)
 6. **Response Formatting** → API returns JSON with answer, sources, context_count
 7. **Display** → JavaScript renders message with citations and styling
 
@@ -132,10 +132,10 @@ Transform static educational documentation into an intelligent, conversational l
 - **Vector Embeddings**: Sentence transformers (all-MiniLM-L6-v2, 384-dimensional vectors)
 - **Semantic Search**: ChromaDB implementation with cosine similarity and relevance scoring
 - **RAG Pipeline Architecture**: Document loading → Chunking → Embedding → Retrieval → Generation
-- **Tool Calling & Function Definitions**: Advanced Anthropic Claude API function calling with autonomous tool selection
+- **Tool Calling & Function Definitions**: Advanced OpenAI API function calling with autonomous tool selection
 - **Multi-Turn Conversations**: Managing conversation state and iterative tool calls with context windows
 - **Prompt Engineering**: Specialized system prompts for educational content delivery and tool selection
-- **Model Integration**: Claude Opus 4.6 integration with context management and token optimization
+- **Model Integration**: GPT-3.5-turbo integration with context management and token optimization
 - **Error Recovery**: Intelligent fallback mechanisms and graceful degradation
 
 ### API Development & Backend Engineering
@@ -147,7 +147,7 @@ Transform static educational documentation into an intelligent, conversational l
 - **Async/Await Patterns**: Non-blocking I/O for scalable request handling
 - **Error Handling**: Comprehensive exception management with HTTP status codes
 - **State Management**: Global RAG system lifecycle management and initialization
-- **API Integration**: Anthropic Claude API integration with tool definitions and streaming
+- **API Integration**: OpenAI API integration with tool definitions and message formatting
 
 ### System Architecture & Design
 
@@ -326,7 +326,7 @@ Comprehensive learning materials:
 
 ### AI/ML & Data Science
 
-- **Anthropic Claude Opus 4.6**: State-of-the-art language model for response generation and reasoning
+- **OpenAI GPT-3.5-turbo**: State-of-the-art language model for response generation and reasoning
 - **Sentence Transformers** (all-MiniLM-L6-v2): 22M parameter embedding model with 384-dimensional vectors
 - **ChromaDB 0.4.24**: Vector database with persistent SQLite backend and cosine similarity search
 - **PyYAML 6.0.1**: Structured metadata extraction from markdown frontmatter
@@ -357,7 +357,7 @@ Comprehensive learning materials:
 ### Prerequisites
 
 - Python 3.8 or higher
-- Anthropic API key (get one at [console.anthropic.com](https://console.anthropic.com))
+- OpenAI API key (get one at [platform.openai.com/api-keys](https://platform.openai.com/api-keys))
 - Git (for version control)
 
 ### Installation & Setup
@@ -375,8 +375,8 @@ pip install -r requirements.txt
 # Create environment configuration file
 cp .env.example .env
 
-# Edit .env to add your Anthropic API key
-# ANTHROPIC_API_KEY=sk-ant-api03-YOUR_KEY_HERE
+# Edit .env to add your OpenAI API key
+# OPENAI_API_KEY=sk-YOUR_KEY_HERE
 ```
 
 ### Running the Application
@@ -480,7 +480,7 @@ Specializing in:
 
 ## 🙏 Acknowledgments
 
-- **Anthropic** for Claude API and excellent documentation
+- **OpenAI** for GPT-3.5-turbo API and excellent documentation
 - **Sentence Transformers** for production-grade embedding models
 - **ChromaDB** for vector database technology
 - **FastAPI** community for the excellent async web framework

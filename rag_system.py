@@ -7,7 +7,7 @@ from typing import Optional
 import yaml
 import chromadb
 from sentence_transformers import SentenceTransformer
-from anthropic import Anthropic
+from openai import OpenAI
 
 # Import backend tools if available
 try:
@@ -39,8 +39,8 @@ class RAGSystem:
         # Initialize embedding model
         self.embedding_model = SentenceTransformer(model_name)
 
-        # Initialize Anthropic client
-        self.anthropic_client = Anthropic()
+        # Initialize OpenAI client
+        self.openai_client = OpenAI()
 
         # Store documents info
         self.documents = {}
@@ -279,7 +279,7 @@ class RAGSystem:
         return context
 
     def generate_response(self, query: str, context: list) -> tuple:
-        """Generate response using Claude API with retrieved context.
+        """Generate response using OpenAI API with retrieved context.
 
         Args:
             query: User query
@@ -326,17 +326,17 @@ Please answer this question: {query}"""
         else:
             user_message = f"Question: {query}\n\nNote: I don't have specific documentation on this topic."
 
-        # Call Claude API
-        response = self.anthropic_client.messages.create(
-            model="claude-opus-4-6",
+        # Call OpenAI API
+        response = self.openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
             max_tokens=1024,
-            system=system_prompt,
             messages=[
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message}
             ]
         )
 
-        return response.content[0].text, sources
+        return response.choices[0].message.content, sources
 
     def generate_response_with_tools(self, query: str, tools: list = None, max_iterations: int = 5) -> tuple:
         """Generate response using Claude API with tool calling.
@@ -382,13 +382,16 @@ Guidelines:
         while current_iteration < max_iterations:
             current_iteration += 1
 
-            # Call Claude API with tools
-            response = self.anthropic_client.messages.create(
-                model="claude-opus-4-6",
+            # Call OpenAI API with tools
+            messages_with_system = [
+                {"role": "system", "content": system_prompt}
+            ] + messages
+
+            response = self.openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
                 max_tokens=1024,
-                system=system_prompt,
                 tools=tools,
-                messages=messages
+                messages=messages_with_system
             )
 
             # Check stop reason
